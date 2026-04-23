@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación Nutricional — Iriana Virguez</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sage: #7a9e7e;
+    --sage-light: #b8d4bb;
+    --sage-dark: #4a6e4e;
+    --cream: #faf7f2;
+    --warm-white: #f5f0e8;
+    --brown: #5c4a3a;
+    --brown-light: #8a7060;
+    --accent: #c9855e;
+    --text: #3a2e26;
+    --text-light: #7a6a5a;
+    --border: #ddd5c8;
+  }
+  body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(135deg, var(--sage-dark) 0%, #3a5c3e 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -80px; right: -80px;
+    width: 260px; height: 260px; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .header::after {
+    content: ''; position: absolute; bottom: -50px; left: -50px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-eyebrow {
+    font-size: 0.68rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--sage-light); margin-bottom: 0.75rem;
+  }
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem; font-weight: 300; color: #fff; line-height: 1.15; margin-bottom: 0.4rem;
+  }
+  .header h1 em { font-style: italic; color: var(--sage-light); }
+  .header-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; color: rgba(255,255,255,0.75); font-weight: 300;
+    letter-spacing: 0.08em; margin-top: 0.6rem;
+  }
+  .header-name span { color: var(--sage-light); font-style: italic; }
+  .header-sub {
+    font-size: 0.8rem; color: rgba(255,255,255,0.5);
+    margin-top: 0.4rem; font-weight: 300;
+  }
+
+  .progress-wrap {
+    background: var(--warm-white); padding: 0.9rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 1rem;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .progress-label { font-size: 0.72rem; color: var(--text-light); white-space: nowrap; font-weight: 500; }
+  .progress-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage), var(--accent));
+    border-radius: 2px; width: 0%; transition: width 0.4s ease;
+  }
+
+  .form-container { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+  .section {
+    background: #fff; border-radius: 18px; padding: 2rem;
+    margin-bottom: 1.5rem; border: 1px solid var(--border);
+    box-shadow: 0 2px 14px rgba(0,0,0,0.04);
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section:nth-child(2) { animation-delay: 0.05s; }
+  .section:nth-child(3) { animation-delay: 0.10s; }
+  .section:nth-child(4) { animation-delay: 0.15s; }
+  .section:nth-child(5) { animation-delay: 0.20s; }
+  .section:nth-child(6) { animation-delay: 0.25s; }
+  .section:nth-child(7) { animation-delay: 0.30s; }
+
+  .section-header {
+    display: flex; align-items: center; gap: 0.85rem;
+    margin-bottom: 1.5rem; padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 38px; height: 38px; background: linear-gradient(135deg, var(--sage-light), #d4e8d6);
+    border-radius: 11px; display: flex; align-items: center;
+    justify-content: center; font-size: 1.15rem; flex-shrink: 0;
+  }
+  .section-meta { flex: 1; }
+  .section-num { font-size: 0.65rem; color: var(--text-light); letter-spacing: 0.18em; text-transform: uppercase; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.38rem; font-weight: 600; color: var(--brown); }
+
+  .field-group { margin-bottom: 1.2rem; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--brown-light); letter-spacing: 0.03em; margin-bottom: 0.38rem; }
+  label .req { color: var(--accent); margin-left: 2px; }
+
+  input[type="text"], input[type="number"], input[type="email"], select, textarea {
+    width: 100%; background: var(--cream); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 0.65rem 0.9rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    outline: none; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--sage); box-shadow: 0 0 0 3px rgba(122,158,126,0.15); background: #fff;
+  }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a6a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 0.9rem center; padding-right: 2.5rem;
+  }
+
+  .hint { font-size: 0.73rem; color: var(--text-light); margin-top: 0.35rem; line-height: 1.4; }
+
+  /* Checkbox & radio grid */
+  .check-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.5rem;
+    margin-top: 0.4rem;
+  }
+  .check-grid.cols-2 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+  .check-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--cream); border: 1.5px solid var(--border);
+    border-radius: 9px; padding: 0.5rem 0.75rem; cursor: pointer;
+    transition: border-color 0.18s, background 0.18s;
+    font-size: 0.85rem;
+  }
+  .check-item:hover { border-color: var(--sage-light); background: #f0f6f1; }
+  .check-item input { display: none; }
+  .check-item .box {
+    width: 17px; height: 17px; border: 1.5px solid var(--border);
+    border-radius: 5px; flex-shrink: 0; display: flex; align-items: center;
+    justify-content: center; transition: all 0.18s;
+  }
+  .check-item input:checked ~ .box {
+    background: var(--sage); border-color: var(--sage);
+  }
+  .check-item input:checked ~ .box::after { content: '✓'; color: #fff; font-size: 0.7rem; font-weight: 700; }
+  .check-item input:checked ~ span { color: var(--sage-dark); font-weight: 500; }
+
+  /* Rating scale */
+  .rating-scale { display: flex; gap: 0.4rem; margin-top: 0.4rem; flex-wrap: wrap; }
+  .rating-scale label {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.3rem; cursor: pointer; margin: 0;
+  }
+  .rating-scale input[type="radio"] { display: none; }
+  .rating-btn {
+    width: 38px; height: 38px; border-radius: 9px;
+    border: 1.5px solid var(--border); background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 500; color: var(--text-light);
+    transition: all 0.18s; cursor: pointer;
+  }
+  .rating-scale input:checked + .rating-btn {
+    background: var(--sage); border-color: var(--sage); color: #fff; font-weight: 700;
+  }
+  .rating-ends { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-light); margin-top: 0.3rem; }
+
+  /* Food preference matrix */
+  .food-matrix { display: grid; gap: 0.7rem; }
+  .food-category { background: var(--cream); border-radius: 12px; padding: 1rem 1.1rem; border: 1px solid var(--border); }
+  .food-cat-title { font-size: 0.78rem; font-weight: 600; color: var(--brown); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+  .food-items { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .food-tag {
+    padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.78rem;
+    border: 1.5px solid var(--border); background: #fff; cursor: pointer;
+    transition: all 0.18s; user-select: none; color: var(--text);
+  }
+  .food-tag:hover { border-color: var(--sage-light); }
+  .food-tag.liked { background: #e8f4e9; border-color: var(--sage); color: var(--sage-dark); font-weight: 500; }
+  .food-tag.disliked { background: #fdecea; border-color: #e57373; color: #b71c1c; font-weight: 500; }
+  .food-legend { display: flex; gap: 1rem; margin-bottom: 0.75rem; font-size: 0.73rem; }
+  .food-legend span { display: flex; align-items: center; gap: 0.3rem; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot.green { background: var(--sage); }
+  .dot.red { background: #e57373; }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px dashed var(--border); margin: 1.2rem 0; }
+
+  /* Submit */
+  .submit-wrap { text-align: center; margin-top: 2rem; }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--sage-dark), #3a5c3e);
+    color: #fff; border: none; border-radius: 50px;
+    padding: 0.9rem 3rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 500; cursor: pointer;
+    letter-spacing: 0.05em; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(74,110,78,0.35);
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 7px 28px rgba(74,110,78,0.45); }
+  .btn-submit:active { transform: translateY(0); }
+  .submit-note { font-size: 0.75rem; color: var(--text-light); margin-top: 0.8rem; }
+
+  /* Success */
+  .success-msg {
+    display: none; text-align: center; padding: 2.5rem;
+    background: #fff; border-radius: 18px; border: 1px solid var(--border);
+    margin-top: 1.5rem;
+  }
+  .success-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .success-msg h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--sage-dark); margin-bottom: 0.5rem; }
+  .success-msg p { color: var(--text-light); font-size: 0.88rem; line-height: 1.6; }
+
+  /* Print btn */
+  .top-actions { display: flex; justify-content: flex-end; margin-bottom: 1rem; gap: 0.5rem; }
+  .btn-print {
+    background: transparent; border: 1.5px solid var(--border);
+    border-radius: 50px; padding: 0.45rem 1.1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+    color: var(--text-light); cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .btn-print:hover { border-color: var(--sage); color: var(--sage-dark); }
+
+  @media (max-width: 560px) {
+    .field-row, .field-row-3 { grid-template-columns: 1fr; }
+    .header h1 { font-size: 2rem; }
+    .check-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media print {
+    .progress-wrap, .top-actions, .btn-submit { display: none; }
+    .section { box-shadow: none; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Formulario de Evaluación Inicial</div>
+  <h1>Tu Plan<br><em>Personalizado</em></h1>
+  <div class="header-name">con <span>Iriana Virguez</span></div>
+  <div class="header-sub">Nutrición · Fitness Coaching</div>
+</div>
+
+<div class="progress-wrap">
+  <span class="progress-label">Progreso</span>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-label" id="progressPct">0%</span>
+</div>
+
+<div class="form-container">
+  <div class="top-actions">
+    <button class="btn-print" onclick="window.print()">🖨️ Imprimir</button>
+  </div>
+
+  <form id="mainForm">
+
+    <!-- SECCIÓN 1: DATOS PERSONALES -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">👤</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 01</div>
+          <div class="section-title">Datos Personales</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Nombre completo <span class="req">*</span></label>
+          <input type="text" placeholder="Tu nombre y apellido" required>
+        </div>
+        <div class="field-group">
+          <label>Fecha de nacimiento <span class="req">*</span></label>
+          <input type="text" placeholder="DD/MM/AAAA" required>
+        </div>
+      </div>
+
+      <div class="field-row-3">
+        <div class="field-group">
+          <label>Edad</label>
+          <input type="number" placeholder="Años">
+        </div>
+        <div class="field-group">
+          <label>Sexo biológico <span class="req">*</span></label>
+          <select required>
+            <option value="">Seleccionar</option>
+            <option>Femenino</option>
+            <option>Masculino</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>País / Ciudad</label>
+          <input type="text" placeholder="Ej: Venezuela, Caracas">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>WhatsApp / Teléfono <span class="req">*</span></label>
+          <input type="text" placeholder="+58 412 000 0000" required>
+        </div>
+        <div class="field-group">
+          <label>Correo electrónico</label>
+          <input type="email" placeholder="correo@ejemplo.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: MEDIDAS Y COMPOSICIÓN -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">📏</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 02</div>
+          <div class="section-title">Medidas Corporales</div>
+        </div>
+      </div>
+
+      <div class="field-row-3">
+        <div class="field-group">
+          <label>Peso actual (kg) <span class="req">*</span></label>
+          <input type="number" placeholder="Ej: 65" step="0.1" required>
+        </div>
+        <div class="field-group">
+          <label>Estatura (cm) <span class="req">*</span></label>
+          <input type="number" placeholder="Ej: 165" required>
+        </div>
+        <div class="field-group">
+          <label>Peso meta (kg)</label>
+          <input type="number" placeholder="Ej: 58" step="0.1">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>Complexión</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Delgada / Ectomorfa</option>
+            <option>Mediana / Mesomorfa</option>
+            <option>Robusta / Endomorfa</option>
+            <option>No lo sé</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>% Grasa corporal (si lo conoces)</label>
+          <input type="text" placeholder="Ej: 28% o No lo sé">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Medidas (opcional — cintura, cadera, brazo, muslo)</label>
+        <textarea placeholder="Ej: Cintura 82 cm · Cadera 96 cm · Brazo 30 cm · Muslo 55 cm&#10;Si no las tienes, no hay problema, puedes tomarlas después."></textarea>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: OBJETIVO Y MOTIVACIÓN -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 03</div>
+          <div class="section-title">Objetivo & Motivación</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>¿Cuál es tu objetivo principal? <span class="req">*</span></label>
+        <div class="check-grid cols-2">
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Bajar de peso / grasa</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Ganar masa muscular</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Mejorar hábitos alimenticios</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Aumentar energía y vitalidad</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Mejorar rendimiento deportivo</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Mantenimiento de peso actual</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Control de una condición de salud</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Otro</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Cuéntame con tus palabras qué quieres lograr y por qué es importante para ti</label>
+        <textarea placeholder="Ej: Quiero bajar los 10 kg que subí en el embarazo antes de mi boda en diciembre. Me siento sin energía y quiero sentirme bien conmigo misma..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label>¿Has intentado dietas o planes anteriores? ¿Qué funcionó y qué no?</label>
+        <textarea placeholder="Ej: Probé keto y bajé rápido pero no pude sostenerlo. Con conteo de calorías me frustré mucho..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label>¿Cuánto tiempo le puedes dedicar a tu alimentación y bienestar? <span class="req">*</span></label>
+        <select required>
+          <option value="">Seleccionar</option>
+          <option>Muy poco — quiero algo rápido y práctico</option>
+          <option>Moderado — puedo dedicarle 30-45 min al día</option>
+          <option>Bastante — estoy dispuesta/o a cocinar y planificar</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 4: SALUD Y CONDICIONES -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🩺</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 04</div>
+          <div class="section-title">Salud & Condiciones Médicas</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>¿Tienes alguna condición de salud diagnosticada? (marca todas las que apliquen)</label>
+        <div class="check-grid cols-2">
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Diabetes tipo 2</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Resistencia a la insulina</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Hipotiroidismo / Hipertiroidismo</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Hipertensión</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Colesterol / Triglicéridos altos</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>SOP (Síndrome Ovario Poliquístico)</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Problemas digestivos / Colon irritable</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Anemia</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Embarazo / Lactancia</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Ninguna</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>¿Tienes alergias o intolerancias alimentarias?</label>
+        <div class="check-grid">
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Lactosa</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Gluten</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Mariscos</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Frutos secos</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Huevo</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Soya</span></label>
+          <label class="check-item"><input type="checkbox"><div class="box"></div><span>Ninguna</span></label>
+        </div>
+        <input type="text" placeholder="Otra alergia o intolerancia..." style="margin-top: 0.6rem;">
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>¿Tomas algún medicamento o suplemento actualmente?</label>
+          <textarea placeholder="Ej: Levotiroxina 50 mcg, hierro, vitamina D...&#10;Si no, escribe Ninguno." style="min-height:70px;"></textarea>
+        </div>
+        <div class="field-group">
+          <label>¿Tienes alguna restricción o preferencia alimentaria?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Ninguna</option>
+            <option>Vegetariana</option>
+            <option>Vegana</option>
+            <option>Sin cerdo</option>
+            <option>Sin res</option>
+            <option>Sin mariscos</option>
+            <option>Otra</option>
+          </select>
+          <input type="text" placeholder="Especificar si seleccionaste Otra..." style="margin-top:0.5rem;">
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 5: HÁBITOS ACTUALES -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🍽️</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 05</div>
+          <div class="section-title">Hábitos Alimenticios Actuales</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>¿Cuántas comidas haces al día normalmente? <span class="req">*</span></label>
+          <select required>
+            <option value="">Seleccionar</option>
+            <option>1 comida</option>
+            <option>2 comidas</option>
+            <option>3 comidas</option>
+            <option>4 comidas (3 principales + merienda)</option>
+            <option>5 o más comidas</option>
+            <option>Sin horario fijo, como cuando puedo</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>¿Desayunas habitualmente?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Sí, siempre</option>
+            <option>A veces</option>
+            <option>Casi nunca</option>
+            <option>No desayuno</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Descríbeme un día típico de comidas — ¿qué comes normalmente desde que te levantas hasta que te acuestas? <span class="req">*</span></label>
+        <textarea style="min-height: 130px;" placeholder="Ej:&#10;Desayuno (8am): Café con leche y pan con mantequilla&#10;Media mañana (11am): Fruta o galletas&#10;Almuerzo (1pm): Arroz, pollo guisado y ensalada&#10;Merienda (4pm): Un café y algo dulce&#10;Cena (8pm): Sobras del almuerzo o sándwich" required></textarea>
+        <div class="hint">💡 No tiene que ser perfecto — cuéntame cómo comes en un día normal, no el mejor día de tu semana.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>¿Cuánta agua tomas al día?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Menos de 1 litro</option>
+            <option>Entre 1 y 1.5 litros</option>
+            <option>Entre 1.5 y 2 litros</option>
+            <option>Más de 2 litros</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>¿Con qué frecuencia comes fuera de casa o pides comida?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Raramente (1-2 veces por semana)</option>
+            <option>Moderado (3-4 veces por semana)</option>
+            <option>Frecuente (casi todos los días)</option>
+            <option>Siempre como fuera</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>¿Consumes alcohol?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>No consumo</option>
+            <option>Ocasionalmente (fechas especiales)</option>
+            <option>Los fines de semana</option>
+            <option>Varias veces a la semana</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>¿Tienes ansiedad por la comida o "antojos" frecuentes?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>No, generalmente como sin ansiedad</option>
+            <option>A veces, especialmente en la tarde/noche</option>
+            <option>Sí, con frecuencia (dulces, salados, etc.)</option>
+            <option>Sí, es uno de mis retos principales</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>¿Sabes cocinar? ¿Quién cocina en tu casa?</label>
+        <textarea placeholder="Ej: Sí sé cocinar, pero tengo poco tiempo. Mi mamá cocina el almuerzo. En la noche cocino yo..." style="min-height:70px;"></textarea>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 6: PREFERENCIAS ALIMENTARIAS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🥗</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 06</div>
+          <div class="section-title">Preferencias de Alimentos</div>
+        </div>
+      </div>
+
+      <p style="font-size:0.83rem; color:var(--text-light); margin-bottom:1rem; line-height:1.5;">
+        Esta sección es clave para diseñar tu menú. Haz <strong>clic una vez</strong> en los alimentos que te <strong style="color:var(--sage-dark)">gustan ✓</strong>, y <strong>dos veces</strong> en los que <strong style="color:#b71c1c">NO te gustan ✗</strong>. Un tercer clic los deja neutros.
+      </p>
+
+      <div class="food-legend">
+        <span><div class="dot green"></div> Me gusta</span>
+        <span><div class="dot red"></div> No me gusta</span>
+        <span style="color:var(--text-light)">Sin color = Indiferente</span>
+      </div>
+
+      <div class="food-matrix">
+
+        <div class="food-category">
+          <div class="food-cat-title">🥩 Proteínas animales</div>
+          <div class="food-items">
+            <div class="food-tag" onclick="toggleFood(this)">Pollo</div>
+            <div class="food-tag" onclick="toggleFood(this)">Res / carne molida</div>
+            <div class="food-tag" onclick="toggleFood(this)">Cerdo</div>
+            <div class="food-tag" onclick="toggleFood(this)">Pescado blanco</div>
+            <div class="food-tag" onclick="toggleFood(this)">Salmón / atún</div>
+            <div class="food-tag" onclick="toggleFood(this)">Camarones</div>
+            <div class="food-tag" onclick="toggleFood(this)">Sardinas / anchoas</div>
+            <div class="food-tag" onclick="toggleFood(this)">Huevos</div>
+            <div class="food-tag" onclick="toggleFood(this)">Jamón de pavo</div>
+            <div class="food-tag" onclick="toggleFood(this)">Hígado / vísceras</div>
+          </div>
+        </div>
+
+        <div class="food-category">
+          <div class="food-cat-title">🫘 Proteínas vegetales y legumbres</div>
+          <div class="food-items">
+            <div class="food-tag" onclick="toggleFood(this)">Caraotas negras</div>
+            <div class="food-tag" onclick="toggleFood(this)">Lentejas</div>
+            <div class="food-tag" onclick="toggleFood(this)">Garbanzos</div>
+            <div class="food-tag" onclick="toggleFood(this)">Arvejas</div>
+            <div class="food-tag" onclick="toggleFood(this)">Quinoa</div>
+            <div class="food-tag" onclick="toggleFood(this)">Tofu</div>
+            <div class="food-tag" onclick="toggleFood(this)">Tempeh</div>
+            <div class="food-tag" onclick="toggleFood(this)">Edamame</div>
+          </div>
+        </div>
+
+        <div class="food-category">
+          <div class="food-cat-title">🥦 Vegetales</div>
+          <div class="food-items">
+            <div class="food-tag" onclick="toggleFood(this)">Brócoli</div>
+            <div class="food-tag" onclick="toggleFood(this)">Espinaca</div>
+            <div class="food-tag" onclick="toggleFood(this)">Lechuga</div>
+            <div class="food-tag" onclick="toggleFood(this)">Tomate</div>
+            <div class="food-tag" onclick="toggleFood(this)">Pepino</div>
+            <div class="food-tag" onclick="toggleFood(this)">Zanahoria</div>
+            <div class="food-tag" onclick="toggleFood(this)">Celery / apio</div>
+            <div class="food-tag" onclick="toggleFood(this)">Cebolla</div>
+            <div class="food-tag" onclick="toggleFood(this)">Ajo</div>
+            <div class="food-tag" onclick="toggleFood(this)">Pimentón</div>
+            <div class="food-tag" onclick="toggleFood(this)">Berenjena</div>
+            <div class="food-tag" onclick="toggleFood(this)">Calabacín</div>
+            <div class="food-tag" onclick="toggleFood(this)">Coliflor</div>
+            <div class="food-tag" onclick="toggleFood(this)">Repollo</div>
+            <div class="food-tag" onclick="toggleFood(this)">Remolacha</div>
+            <div class="food-tag" onclick="toggleFood(this)">Aguacate</div>
+            <div class="food-tag" onclick="toggleFood(this)">Chayota</div>
+            <div class="food-tag" onclick="toggleFood(this)">Vainitas</div>
+          </div>
+        </div>
+
+        <div class="food-category">
+          <div class="food-cat-title">🍎 Frutas</div>
+          <div class="food-items">
+            <div class="food-tag" onclick="toggleFood(this)">Manzana</div>
+            <div class="food-tag" onclick="toggleFood(this)">Pera</div>
+            <div class="food-tag" onclick="toggleFood(this)">Naranja / mandarina</div>
+            <div class="food-tag" onclick="toggleFood(this)">Cambur / plátano</div>
+            <div class="food-tag" onclick="toggleFood(this)">Fresa / frutos rojos</div>
+            <div class="food-tag" onclick="toggleFood(this)">Papaya / lechosa</div>
+            <div class="food-tag" onclick="toggleFood(this)">Melón / patilla</div>
+            <div class="food-tag" onclick="toggleFood(this)">Piña</div>
+            <div class="food-tag" onclick="toggleFood(this)">Mango</div>
+            <div class="food-tag" onclick="toggleFood(this)">Uvas</div>
+            <div class="food-tag" onclick="toggleFood(this)">Kiwi</div>
+            <div class="food-tag" onclick="toggleFood(this)">Durazno / melocotón</div>
+            <div class="food-tag" onclick="toggleFood(this)">Guayaba</div>
+          </div>
+        </div>
+
+        <div class="food-category">
+          <div class="food-cat-title">🍚 Carbohidratos y cereales</div>
+          <div class="food-items">
+            <div class="food-tag" onclick="toggleFood(this)">Arroz blanco</div>
+            <div class="food-tag" onclick="toggleFood(this)">Arroz integral</div>
+            <div class="food-tag" onclick="toggleFood(this)">Avena</div>
+            <div class="food-tag" onclick="toggleFood(this)">Pan integral</div>
+            <div class="food-tag" onclick="toggleFood(this)">Pan blanco</div>
+            <div class="food-tag" onclick="toggleFood(this)">Pasta</div>
+            <div class="food-tag" onclick="toggleFood(this)">Papa / apio</div>
+            <div class="food-tag" onclick="toggleFood(this)">Yuca / casabe</div>
+            <div class="food-tag" onclick="toggleFood(this)">Plátano verde / tostones</div>
+            <div class="food-tag" onclick="toggleFood(this)">Plátano maduro</div>
+            <div class="food-tag" onclick="toggleFood(this)">Arepa de maíz</div>
+            <div class="food-tag" onclick="toggleFood(this)">Cachapa</div>
+          </div>
+        </div>
+
+        <div class="food-category">
+          <div class="food-cat-title">🧀 Lácteos y grasas saludables</div>
+          <div class="food-items">
+            <div class="food-tag" onclick="toggleFood(this)">Queso blanco</div>
+            <div class="food-tag" onclick="toggleFood(this)">Queso amarillo</div>
+            <div class="food-tag" onclick="toggleFood(this)">Yogur natural</div>
+            <div class="food-tag" onclick="toggleFood(this)">Yogur griego</div>
+            <div class="food-tag" onclick="toggleFood(this)">Leche entera</div>
+            <div class="food-tag" onclick="toggleFood(this)">Leche descremada</div>
+            <div class="food-tag" onclick="toggleFood(this)">Leche vegetal</div>
+            <div class="food-tag" onclick="toggleFood(this)">Nueces / almendras</div>
+            <div class="food-tag" onclick="toggleFood(this)">Maní / mantequilla de maní</div>
+            <div class="food-tag" onclick="toggleFood(this)">Aceite de oliva</div>
+            <div class="food-tag" onclick="toggleFood(this)">Semillas (chía, linaza)</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="field-group" style="margin-top:1.2rem;">
+        <label>¿Hay algún alimento que ames o que detestes y no aparezca arriba?</label>
+        <textarea placeholder="Ej: Me encanta la crema de auyama. Detesto el cilantro y el ají picante..." style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label>¿Tienes algún alimento o comida que consideres tu "debilidad" o que te cueste resistir?</label>
+        <input type="text" placeholder="Ej: Chocolate, helado, frituras, panes dulces...">
+      </div>
+    </div>
+
+    <!-- SECCIÓN 7: ACTIVIDAD FÍSICA Y SUEÑO -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🏋️</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 07</div>
+          <div class="section-title">Actividad Física & Estilo de Vida</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>¿Haces ejercicio actualmente? <span class="req">*</span></label>
+          <select required>
+            <option value="">Seleccionar</option>
+            <option>No hago ejercicio</option>
+            <option>1-2 veces por semana</option>
+            <option>3-4 veces por semana</option>
+            <option>5 o más veces por semana</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>¿Qué tipo de actividad física realizas?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Ninguna por ahora</option>
+            <option>Caminata / cardio suave</option>
+            <option>Gym — pesas / musculación</option>
+            <option>Gym — funcional / crossfit</option>
+            <option>Yoga / pilates</option>
+            <option>Deporte (fútbol, tenis, natación…)</option>
+            <option>Cardio en casa (videos, bicicleta)</option>
+            <option>Combinado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>¿Cómo es tu nivel de actividad durante el día en tu trabajo/rutina? <span class="req">*</span></label>
+        <select required>
+          <option value="">Seleccionar</option>
+          <option>Sedentario — estoy sentada/o la mayor parte del día</option>
+          <option>Ligero — camino algo pero trabajo principalmente sentada/o</option>
+          <option>Moderado — estoy de pie o en movimiento varias horas</option>
+          <option>Activo — trabajo físico o estoy en constante movimiento</option>
+        </select>
+      </div>
+
+      <hr class="divider">
+
+      <div class="field-row">
+        <div class="field-group">
+          <label>¿Cuántas horas duermes en promedio?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Menos de 5 horas</option>
+            <option>5-6 horas</option>
+            <option>7-8 horas</option>
+            <option>Más de 8 horas</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>¿Cómo describirías tu nivel de estrés actual?</label>
+          <select>
+            <option value="">Seleccionar</option>
+            <option>Bajo — me siento tranquila/o</option>
+            <option>Moderado — manejable</option>
+            <option>Alto — me afecta con frecuencia</option>
+            <option>Muy alto — es un problema importante</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>¿Hay algo más de tu estilo de vida que crees que es importante que yo sepa para diseñar tu plan?</label>
+        <textarea placeholder="Ej: Trabajo de noche, tengo 3 hijos, viajo mucho, no tengo acceso a gimnasio, vivo sola, tengo presupuesto limitado para comida..."></textarea>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 8: COMPROMISOS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🤝</div>
+        <div class="section-meta">
+          <div class="section-num">Sección 08</div>
+          <div class="section-title">Tu Compromiso</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Del 1 al 10, ¿qué tan lista/o estás para hacer cambios en tu alimentación ahora mismo?</label>
+        <div class="rating-scale">
+          <label><input type="radio" name="readiness" value="1"><div class="rating-btn">1</div></label>
+          <label><input type="radio" name="readiness" value="2"><div class="rating-btn">2</div></label>
+          <label><input type="radio" name="readiness" value="3"><div class="rating-btn">3</div></label>
+          <label><input type="radio" name="readiness" value="4"><div class="rating-btn">4</div></label>
+          <label><input type="radio" name="readiness" value="5"><div class="rating-btn">5</div></label>
+          <label><input type="radio" name="readiness" value="6"><div class="rating-btn">6</div></label>
+          <label><input type="radio" name="readiness" value="7"><div class="rating-btn">7</div></label>
+          <label><input type="radio" name="readiness" value="8"><div class="rating-btn">8</div></label>
+          <label><input type="radio" name="readiness" value="9"><div class="rating-btn">9</div></label>
+          <label><input type="radio" name="readiness" value="10"><div class="rating-btn">10</div></label>
+        </div>
+        <div class="rating-ends"><span>Nada lista/o</span><span>Totalmente comprometida/o</span></div>
+      </div>
+
+      <div class="field-group">
+        <label>¿Cuál es el mayor obstáculo que crees que tendrás para cumplir el plan?</label>
+        <textarea placeholder="Ej: La ansiedad por comer dulces en la noche, los fines de semana que salgo a comer con la familia, el poco tiempo para cocinar..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label>¿Tienes alguna pregunta o comentario adicional para mí?</label>
+        <textarea placeholder="Cualquier cosa que quieras que yo sepa o preguntas que tengas sobre el proceso..."></textarea>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="btn-submit">✨ Enviar mi formulario</button>
+      <div class="submit-note">Iriana revisará tu información y se pondrá en contacto contigo a la brevedad 💚</div>
+    </div>
+
+  </form>
+
+  <div class="success-msg" id="successMsg">
+    <div class="success-icon">🌿</div>
+    <h2>¡Recibido con éxito!</h2>
+    <p>Gracias por tomarte el tiempo de completar tu evaluación.<br>
+    <strong>Iriana Virguez</strong> revisará tu información y te contactará pronto<br>para comenzar a construir tu plan personalizado. 💚</p>
+  </div>
+
+</div>
+
+<script>
+  // Food tag toggle: click 1 = liked, click 2 = disliked, click 3 = neutral
+  function toggleFood(el) {
+    if (!el.classList.contains('liked') && !el.classList.contains('disliked')) {
+      el.classList.add('liked');
+    } else if (el.classList.contains('liked')) {
+      el.classList.remove('liked');
+      el.classList.add('disliked');
+    } else {
+      el.classList.remove('disliked');
+    }
+  }
+
+  // Checkbox visual toggle
+  document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', function() {
+      const item = this.closest('.check-item');
+      item.style.borderColor = this.checked ? 'var(--sage)' : 'var(--border)';
+      item.style.background = this.checked ? '#f0f6f1' : '';
+    });
+  });
+
+  // Progress bar
+  function updateProgress() {
+    const required = document.querySelectorAll('[required]');
+    let filled = 0;
+    required.forEach(el => {
+      if (el.value && el.value.trim() !== '') filled++;
+    });
+    const pct = Math.round((filled / required.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', updateProgress);
+    el.addEventListener('change', updateProgress);
+  });
+
+  // Form submit
+  document.getElementById('mainForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    this.style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
